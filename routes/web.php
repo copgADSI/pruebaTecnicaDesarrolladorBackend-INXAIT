@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingPageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+/* Route::get('/', function () {
+    return view('LaginPage.index');
+});
+ */
+Auth::routes();
+
+/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
+
+Route::controller(LandingPageController::class)->group(function () {
+    Route::get('/', 'index')->name('landingPage.index');
+    Route::post('/register-user', 'store')->name('landingPage.store');
 });
