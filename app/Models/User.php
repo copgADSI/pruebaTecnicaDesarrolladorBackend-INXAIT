@@ -59,13 +59,6 @@ class User extends Authenticatable
         );
     }
 
-    protected function last_name():Attribute    
-    {
-        return new Attribute(
-            get: fn ($value) => strtoupper($value)
-        );
-    }
-
     /* RELATIONSHIPS */
 
     public function state()

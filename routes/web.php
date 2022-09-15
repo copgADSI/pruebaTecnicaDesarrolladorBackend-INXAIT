@@ -34,4 +34,6 @@ Route::controller(LandingPageController::class)->group(function () {
 
 Route::controller(ReportsController::class)->group(function(){
     Route::get('/reportes', 'index')->name('reports.index');
+    Route::get('/generateUsersReport', 'generateUsersReport')->name('reports.generateUsers');
+    Route::get('/generateRafflesReport', 'generateRafflesReport')->name('reports.generateRaffles');
 });
