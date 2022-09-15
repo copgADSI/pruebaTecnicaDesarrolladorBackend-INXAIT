@@ -17,21 +17,34 @@ class usersTest extends TestCase
     {
         $state_id = State::all()->random()->id;
         $city_id = City::where('state_id', '=', $state_id)->inRandomOrder()->first()->id;
-
+        $rand = rand(3,100);
         $user_fields = [
-            'name' => 'Roberto',
-            'last_name' => 'Pérez',
-            'citizenship_card' => '10512754321',
-            'phone' =>  '3354598789',
-            'email' => 'Roberto123Perez@mail.com',
+            'name' => 'Cristian',
+            'last_name' => 'Parada Gualteros',
+            'citizenship_card' => mt_rand(1000000000,9999999999),
+            'phone' =>  mt_rand(1000000000,9999999999),
+            'email' => "cristian{$rand}@mail.es",
             'state_id' => $state_id,
             'city_id' => $city_id,
-            'habeas_data' => true
+            'habeas_data' => 1
         ];
-
-        $response =  $this->post(route('landingPage.store', $user_fields));
-        dd($response);
+        $this->post(route('landingPage.store', $user_fields));
         $this->assertDatabaseHas('users', $user_fields);
-        $this->assertDatabaseCount('users', 1);
+    }
+
+    /**
+     * Comprueba la obtención de ciudades dependiendo 
+     * del departamento seleccionado.
+     */
+    public function test_a_get_cities_by_state(): void
+    {
+        $state_id = State::all()->random()->id;
+        $response = $this->get(route('landingPage.cities', ['id' => $state_id]));
+        $response_data = $response->json();
+        foreach ($response_data['cities'] as $key => $city) {
+            //$this->assertArrayHasKey($city, $response_data['cities']);
+            $this->assertDatabaseHas('cities', $city);
+        }
+        $response->assertStatus(200);
     }
 }

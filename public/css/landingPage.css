@@ -1,0 +1,11 @@
+#raffle_container{
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    background: rgb(144, 144, 144);
+    transition: 0.4s all ease;
+}
+
+#raffle_container button{
+    margin-top: 40px;
+}

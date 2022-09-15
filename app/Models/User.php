@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\city\City;
+use App\Models\raffle\Raffle_winner;
 use App\Models\State\State;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,8 +23,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
+        'phone',
+        'citizenship_card',
         'email',
-        'password',
+        'state_id',
+        'city_id',
+        'habeas_data'
     ];
 
     /**
@@ -49,5 +56,15 @@ class User extends Authenticatable
     public function state()
     {
         return $this->hasOne(State::class, 'state_id', 'id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(City::class, 'city_id', 'id');
+    }
+
+    public function raffle_winner()
+    {
+        return $this->belongsTo(Raffle_winner::class, 'user_id', 'id');
     }
 }

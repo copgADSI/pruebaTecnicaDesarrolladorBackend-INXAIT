@@ -8,7 +8,7 @@
                 <div class="card-header">Registro Sorteo </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('landingPage.store') }}">
                         @csrf
 
                         <div class="row mb-3">
@@ -17,7 +17,7 @@
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control 
                                     @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required
-                                    autocomplete="name" autofocus>
+                                    onkeydown="return /[a-z]/i.test(event.key)" autocomplete="name" autofocus>
 
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -33,8 +33,9 @@
 
                             <div class="col-md-6">
                                 <input id="lastname" type="text" class="form-control 
-                                    @error('lastname') is-invalid @enderror" name="lastname"
-                                    value="{{ old('lastname') }}" required autocomplete="lastname" autofocus>
+                                    @error('lastname') is-invalid @enderror" name="last_name"
+                                    value="{{ old('lastname') }}" required autocomplete="lastname" autofocus
+                                    onkeydown="return /[a-z]/i.test(event.key)">
 
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -47,16 +48,17 @@
 
 
                         <div class="row mb-3">
-                            <label for="citizenship" class="col-md-4 col-form-label text-md-end">{{ __('Cédula de
+                            <label for="citizenship_card" class="col-md-4 col-form-label text-md-end">{{ __('Cédula de
                                 Ciudadanía')
                                 }}</label>
 
                             <div class="col-md-6">
-                                <input id="citizenship" type="number"
-                                    class="form-control @error('citizenship') is-invalid @enderror" name="citizenship"
-                                    value="{{ old('citizenship') }}" required autocomplete="citizenship">
+                                <input id="citizenship_card" type="number"
+                                    class="form-control @error('citizenship_card') is-invalid @enderror"
+                                    name="citizenship_card" value="{{ old('citizenship_card') }}" required
+                                    autocomplete="citizenship_card">
 
-                                @error('citizenship')
+                                @error('citizenship_card')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -98,16 +100,20 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="state" class="col-md-4 col-form-label text-md-end">{{ __('Departamento')
+                            <label for="state_id" class="col-md-4 col-form-label text-md-end">{{ __('Departamento')
                                 }}</label>
 
                             <div class="col-md-6">
-                                <select name="state" id="state" class="form-control"
-                                    class="form-control @error('state') is-invalid @enderror" required
-                                    autocomplete="state">
+                                <select name="state_id" id="state_id" class="form-control"
+                                    onchange="generateCitiesBystate_id(event)"
+                                    class="form-control @error('state_id') is-invalid @enderror" required
+                                    autocomplete="state_id">
                                     <option value="">Seleccionar...</option>
+                                    @foreach ($states as $state)
+                                    <option value="{{ $state['id'] }}"> {{ $state['state'] }} </option>
+                                    @endforeach
                                 </select>
-                                @error('state')
+                                @error('state_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -116,16 +122,16 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="city" class="col-md-4 col-form-label text-md-end">{{ __('Ciudad')
+                            <label for="city_id" class="col-md-4 col-form-label text-md-end">{{ __('Ciudad')
                                 }}</label>
 
                             <div class="col-md-6">
-                                <select name="city" id="city" class="form-control"
-                                    class="form-control @error('city') is-invalid @enderror" required
-                                    autocomplete="city">
+                                <select name="city_id" id="city_id" class="form-control" disabled
+                                    class="form-control @error('city_id') is-invalid @enderror" required
+                                    autocomplete="city_id">
                                     <option value="">Seleccionar...</option>
                                 </select>
-                                @error('city')
+                                @error('city_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -138,7 +144,8 @@
                             <span class="text-left">
                                 Autorizo el tratamiento de mis datos de acuerdo con la
                                 finalidad establecida en la política de protección de datos personales.
-                                <input type="checkbox" onclick="handleBtnRegister(event)" name="habeas_data" id="habeas_data">
+                                <input type="checkbox" value="1" onclick="handleBtnRegister(event)" name="habeas_data"
+                                    id="habeas_data">
                             </span>
                         </div>
                         <div class="row mb-0">
@@ -157,11 +164,41 @@
         </div>
     </div>
 </div>
+<div id="raffle_container" style="height:300px">
+    <button class="btn btn-success" onclick="getUserWinner()">¡Realizar Sorteo!</button><br>
+    <div class="alert alert-success" role="alert" id="winner" hidden>
+
+    </div>
+</div>
 @endsection
 
 <script>
     const handleBtnRegister = (e) => {
         const btnRegister = document.getElementById('register')
         return btnRegister.disabled = !btnRegister.disabled;
+    }
+
+    const generateCitiesBystate_id = async (e) => {
+        const selectCities  = document.getElementById('city_id');
+
+        const url = "{{ route('landingPage.cities') }}";
+        const FULL_URL = url.concat(`?id=${e.target.value} `);
+        const res = await fetch(FULL_URL);
+        const {cities} = await res.json();
+        var opcions ="<option value=''>Seleccionar...</option>";        
+        Object.values(cities).forEach(item => {
+            opcions+= `<option value=${item.id} > ${item.city} </option>`;
+        });
+        selectCities.innerHTML = opcions;
+        selectCities.disabled = false;
+    }
+
+    const getUserWinner = async() => {
+        const span_winner = document.getElementById('winner');
+        const url = "{{route('landingPage.generate_raffle')}}";
+        const response = await fetch(url);
+        const {winner} = await response.json();
+        span_winner.textContent = winner;
+        span_winner.hidden = false;
     }
 </script>

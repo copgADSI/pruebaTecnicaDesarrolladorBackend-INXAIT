@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
     return view('LaginPage.index');
 });
  */
+
 Auth::routes();
 
 /* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
@@ -25,4 +26,7 @@ Auth::routes();
 Route::controller(LandingPageController::class)->group(function () {
     Route::get('/', 'index')->name('landingPage.index');
     Route::post('/register-user', 'store')->name('landingPage.store');
+    Route::get('/getCitiesByState', 'getCities')->name('landingPage.cities');
+    Route::get('/sorteo', 'raffleView')->name('landingPage.raffle');
+    Route::get('/generateRaffle', 'generateRaffle')->name('landingPage.generate_raffle');
 });
