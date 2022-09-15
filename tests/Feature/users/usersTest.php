@@ -17,12 +17,12 @@ class usersTest extends TestCase
     {
         $state_id = State::all()->random()->id;
         $city_id = City::where('state_id', '=', $state_id)->inRandomOrder()->first()->id;
-        $rand = rand(3,100);
+        $rand = rand(3, 100);
         $user_fields = [
             'name' => 'Cristian',
             'last_name' => 'Parada Gualteros',
-            'citizenship_card' => mt_rand(1000000000,9999999999),
-            'phone' =>  mt_rand(1000000000,9999999999),
+            'citizenship_card' => mt_rand(1000000000, 9999999999),
+            'phone' =>  mt_rand(1000000000, 9999999999),
             'email' => "cristian{$rand}@mail.es",
             'state_id' => $state_id,
             'city_id' => $city_id,
@@ -41,7 +41,7 @@ class usersTest extends TestCase
         $state_id = State::all()->random()->id;
         $response = $this->get(route('landingPage.cities', ['id' => $state_id]));
         $response_data = $response->json();
-        foreach ($response_data['cities'] as $key => $city) {
+        foreach ($response_data['cities'] as $city) {
             //$this->assertArrayHasKey($city, $response_data['cities']);
             $this->assertDatabaseHas('cities', $city);
         }

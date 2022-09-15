@@ -86,12 +86,19 @@ class LandingPageController extends Controller
                 [
                     'winner' => "Último usuario ganador {$raffle_winner->name} {$raffle_winner->last_name} ",
                     'id' =>  $raffle_winner->id,
-                    'email' => $raffle_winner->email
+                    'email' => $raffle_winner->email,
+                    'alert' => 'alert alert-success'
                 ],
                 200
             );
         } else {
-            throw new \Exception('Para realizar el sorteo deben haber por lo menos 5 usuarios registrados');
+            return response()->json(
+                [
+                    'winner' => "Deben haber como mínimo  5 usuarios registrados para realizar el sorteo",
+                    'alert' => 'alert alert-danger'
+                ],
+                400
+            );
         }
     }
 }

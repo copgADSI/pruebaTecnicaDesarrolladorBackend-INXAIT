@@ -8,6 +8,13 @@
                 <div class="card-header">Reporte <b>usuarios</b> registrados por fecha y departamento</div>
 
                 <div class="card-body">
+                    @if($errors->any())
+                    @foreach ($errors->all() as $err)
+                    <li>{{ $err}} </li>
+                    @endforeach
+                    @else
+
+                    @endif
                     <form action="{{ route('reports.generateUsers') }}" method="get">
                         @csrf
                         <div class="form-group d-flex">
@@ -20,6 +27,12 @@
                                 <option value="{{$state->id}} "> {{ $state->state }} </option>
                                 @endforeach
                             </select>
+                            @error('state_id')
+
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                             <button type="submit" class="btn btn-success">Generar Excel</button>
                         </div>
                     </form>

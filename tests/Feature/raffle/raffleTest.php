@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class raffleTest extends TestCase
 {
-    const RAFFLE_KEYS = ['id', 'email', 'winner'];
+    const RAFFLE_KEYS = ['id', 'email', 'winner', 'alert'];
     /**
      * Test para comprobar funcionalidad del sorteo.
      */
@@ -16,9 +16,12 @@ class raffleTest extends TestCase
     {
         $response = $this->get(route('landingPage.generate_raffle'));
         $response_data = $response->json();
-        foreach (self::RAFFLE_KEYS as  $key) {
-            $this->assertArrayHasKey($key, $response_data);
+        if (isset($response_data['email'])) {
+            foreach (self::RAFFLE_KEYS as  $key) {
+                $this->assertArrayHasKey($key, $response_data);
+            }
+            $response->assertStatus(200);
         }
-        $response->assertStatus(200);
+        $this->assertArrayHasKey('alert', $response_data);
     }
 }
