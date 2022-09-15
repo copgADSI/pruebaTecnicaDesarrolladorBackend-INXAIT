@@ -6,6 +6,7 @@ use App\Exports\ExportRaffles;
 use App\Exports\ExportUser;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LandingPage\ReportsDashboard;
+use App\Models\State\State;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -19,7 +20,8 @@ class ReportsController extends Controller
     public function index()
     {
         return view('reports.index', [
-            'current_date' => Carbon::now()->toDateString()
+            'current_date' => Carbon::now()->toDateString(),
+            'states' =>  State::all()
         ]);
     }
 
