@@ -49,11 +49,6 @@ class ReportsController extends Controller
      */
     public function generateRafflesReport(Request $request)
     {
-        $request->validate([
-            'start_date' =>  $request->start_date,
-            'end_date' => $request->end_date,
-        ]);
-
         return Excel::download(
             new ExportRaffles($request),
             'sorteos.xlsx'
