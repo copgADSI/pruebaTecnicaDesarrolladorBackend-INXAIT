@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Models\city\City;
 use App\Models\raffle\Raffle_winner;
 use App\Models\State\State;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,6 +51,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected function name():Attribute    
+    {
+        return new Attribute(
+            get: fn ($value) => strtoupper($value)
+        );
+    }
+
+    protected function last_name():Attribute    
+    {
+        return new Attribute(
+            get: fn ($value) => strtoupper($value)
+        );
+    }
 
     /* RELATIONSHIPS */
 

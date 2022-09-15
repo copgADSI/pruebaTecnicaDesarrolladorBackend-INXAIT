@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\Reports\ReportsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,4 +30,8 @@ Route::controller(LandingPageController::class)->group(function () {
     Route::get('/getCitiesByState', 'getCities')->name('landingPage.cities');
     Route::get('/sorteo', 'raffleView')->name('landingPage.raffle');
     Route::get('/generateRaffle', 'generateRaffle')->name('landingPage.generate_raffle');
+});
+
+Route::controller(ReportsController::class)->group(function(){
+    Route::get('/reportes', 'index')->name('reports.index');
 });

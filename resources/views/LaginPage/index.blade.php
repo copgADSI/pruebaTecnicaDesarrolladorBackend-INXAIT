@@ -45,8 +45,6 @@
                             </div>
                         </div>
 
-
-
                         <div class="row mb-3">
                             <label for="citizenship_card" class="col-md-4 col-form-label text-md-end">{{ __('Cédula de
                                 Ciudadanía')

@@ -8,7 +8,6 @@ use App\Models\State\State;
 use App\Models\User;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class LandingPageController extends Controller
 {
