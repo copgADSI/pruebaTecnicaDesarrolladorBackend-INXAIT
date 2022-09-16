@@ -2,13 +2,15 @@
 
 namespace App\Exports;
 
-use App\Models\city\City;
 use App\Models\State\State;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
 
-class ExportUser implements FromCollection
+class ExportUser implements FromCollection, WithHeadings ,WithEvents
 {
 
     protected $request;
@@ -32,7 +34,7 @@ class ExportUser implements FromCollection
         return User::whereBetween(
             DB::raw('DATE(created_at)'),
             [$this->request->start_date, $this->request->end_date]
-        )
+        )->selectRaw('name, last_name, email, phone')
         ->whereIn('state_id', $this->state_id)
         ->get();
     }
@@ -45,6 +47,39 @@ class ExportUser implements FromCollection
      */
     public function headings(): array
     {
-        return ["ID", "Nombre", "Apellido", "Correo Electrónico", "Fecha Creación"];
+        return ["ID", "Nombre", "Apellido", "Correo Electrónico", "Teléfono"];
+    }
+
+
+     /**
+
+     * Write code on Method
+
+     *
+
+     * @return response()
+
+     */
+
+    public function registerEvents(): array
+
+    {
+
+        return [
+
+            AfterSheet::class    => function(AfterSheet $event) {
+
+   
+
+                $event->sheet->getDelegate()->getRowDimension('1')->setRowHeight(2);
+
+                $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(50);
+
+     
+
+            },
+
+        ];
+
     }
 }

@@ -54,4 +54,36 @@ class ReportsController extends Controller
             'sorteos.xlsx'
         );
     }
+
+     /**
+
+     * Write code on Method
+
+     *
+
+     * @return response()
+
+     */
+
+    public function registerEvents(): array
+
+    {
+
+        return [
+
+            AfterSheet::class    => function(AfterSheet $event) {
+
+   
+
+                $event->sheet->getDelegate()->getRowDimension('1')->setRowHeight(40);
+
+                $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(50);
+
+     
+
+            },
+
+        ];
+
+    }
 }
